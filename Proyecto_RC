@@ -1,0 +1,83 @@
+DROP SCHEMA IF EXISTS Proyecto_RC ;
+
+CREATE SCHEMA IF NOT EXISTS Proyecto_RC ;
+
+Use Proyecto_RC ; 
+
+/*Tabla con los datos personales de los agentes administrativos*/
+Create table if not exists Referentes_capacitadores(
+ID_RC INT,
+Nombre Varchar(20),
+Apellido Varchar(20),
+CUIL INT,
+Celular INT,
+Mail Varchar(50),
+Primary Key(ID_RC)
+);
+	
+/*Tabla con los tipos de sistemas que capacitaron los agentes*/
+Create table if not exists Sistemas(
+ID_SIST INT,
+Nombre Varchar(30),
+Primary Key (ID_SIST)
+);
+
+/*Tabla con las areas educativas que pertenecen las escuelas*/
+Create table if not exists AREAS(
+ID_AREA INT,
+AREAS Varchar(50),
+Primary key (ID_AREA)
+);
+
+/*Tabla con los codigos de tramite de los expedientes*/
+Create table if not exists Tratas_exp(
+ID_TRATA Varchar(20),
+Descripcion Varchar(100),
+Primary key (ID_TRATA)
+);
+
+/*Tabla con los tipos de licencias permitidas para usar durante el año*/
+Create table if not exists Tipos_lic(
+ID_LA Varchar(10),
+Descripcion Varchar(40),
+Primary key (ID_LA)
+);
+
+/*Tabla de las capacitaciones brindadas por los Referentes Capacitadores*/
+Create table if not exists Capacitaciones(
+ID_CAP INT auto_increment,
+ID_RC INT not null,
+Tipo_cap Varchar(20),
+ID_SIST INT not null,
+ID_AREA INT not null,
+Modalidad Varchar(30),
+Turno Varchar(20),
+Docentes INT not null,
+Fecha Datetime not null,
+Primary key (ID_CAP),
+foreign key (ID_RC) references Referentes_capacitadores(ID_RC),
+foreign key (ID_SIST) references Sistemas(ID_SIST),
+foreign key (ID_AREA) references AREAS(ID_AREA)
+);
+
+/*Tabla de las licencias usufructuadas por los Referentes Capacitadores durante el año*/
+Create table if not exists Licencias(
+ID_LIC INT auto_increment,
+ID_RC INT not null,
+ID_LA Varchar(10)not null,
+Fecha_uso Datetime not null,
+Fecha_reingreso Datetime not null,
+Primary key (ID_LIC),
+foreign key (ID_RC) references Referentes_capacitadores(ID_RC),
+foreign key (ID_LA) references Tipos_lic(ID_LA)
+);
+
+/*Tabla con la cantidad de expedientes trabajados por los Referentes Capacitadores*/
+Create table if not exists Expedientes(
+ID_EXP Varchar(100),
+ID_TRATA Varchar(20),
+ID_RC INT not null,
+Primary key (ID_EXP),
+foreign key (ID_TRATA) references Tratas_exp(ID_TRATA),
+foreign key (ID_RC) references Referentes_capacitadores(ID_RC)
+);
